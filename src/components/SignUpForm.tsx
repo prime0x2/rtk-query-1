@@ -9,6 +9,9 @@ import { Label } from '@/components/ui/label';
 import { useForm } from 'react-hook-form';
 import { FcGoogle } from 'react-icons/fc';
 
+import { useAppDispatch } from '@/store/hook';
+import { createUser } from '@/store/features/user/userSlice';
+
 type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>;
 
 interface SignupFormInputs {
@@ -23,8 +26,17 @@ export function SignupForm({ className, ...props }: UserAuthFormProps) {
     formState: { errors },
   } = useForm<SignupFormInputs>();
 
+  const dispatch = useAppDispatch();
+
   const onSubmit = (data: SignupFormInputs) => {
     console.log(data);
+
+    dispatch(
+      createUser({
+        email: data.email,
+        password: data.password,
+      })
+    );
   };
 
   return (
@@ -54,13 +66,6 @@ export function SignupForm({ className, ...props }: UserAuthFormProps) {
               {...register('password', { required: 'Password is required' })}
             />
             {errors.password && <p>{errors.password.message}</p>}
-            <Input
-              id="password"
-              placeholder="confirm password"
-              type="password"
-              autoCapitalize="none"
-              autoCorrect="off"
-            />
           </div>
           <Button>Create Account</Button>
         </div>

@@ -2,15 +2,13 @@ import ProductCard from '@/components/ProductCard';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
-import { useToast } from '@/components/ui/use-toast';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { IProduct } from '@/types/globalTypes';
-import { useEffect, useState } from 'react';
 import {
   toggleState,
   setPriceRange,
 } from '@/store/features/products/productSlice';
-import { useGetProductsQuery } from '@/store/api/apiSlice';
+import { useGetProductsQuery } from '@/store/features/products/productApi';
 
 export default function Products() {
   //* new code

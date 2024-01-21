@@ -1,6 +1,6 @@
 import ProductReview from '@/components/ProductReview';
 import { Button } from '@/components/ui/button';
-import { useGetSingleProductQuery } from '@/store/api/apiSlice';
+import { useGetSingleProductQuery } from '@/store/features/products/productApi';
 import { IProduct } from '@/types/globalTypes';
 import { useParams } from 'react-router-dom';
 
@@ -14,10 +14,12 @@ export default function ProductDetails() {
 
   const dispatch = useAppDispatch();
 
-  const { data } = useGetSingleProductQuery(id);
+  const { data, isLoading } = useGetSingleProductQuery(id);
   const product: IProduct = data?.data;
 
   //* new code ends here
+
+  if (isLoading) return <p>Loading...</p>;
 
   return (
     <>
@@ -42,7 +44,7 @@ export default function ProductDetails() {
           </Button>
         </div>
       </div>
-      <ProductReview />
+      <ProductReview id={product._id} />
     </>
   );
 }

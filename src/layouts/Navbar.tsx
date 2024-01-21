@@ -12,8 +12,30 @@ import {
 import { HiOutlineSearch } from 'react-icons/hi';
 import Cart from '../components/Cart';
 import logo from '../assets/images/technet-logo.png';
+import { useAppDispatch, useAppSelector } from '@/store/hook';
+import { signOut } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
+import { FirebaseError } from 'firebase/app';
+import { setUser } from '@/store/features/user/userSlice';
 
 export default function Navbar() {
+  const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state) => state.user);
+
+  const handleLogout = () => {
+    console.log('logout');
+
+    signOut(auth)
+      .then(() => {
+        // Sign-out successful.
+
+        dispatch(setUser(null));
+      })
+      .catch((error: FirebaseError) => {
+        console.log('signout error : ', error);
+      });
+  };
+
   return (
     <nav className="w-full h-16 fixed top backdrop-blur-lg z-10">
       <div className="h-full w-full bg-white/60">
@@ -60,15 +82,27 @@ export default function Navbar() {
                     <DropdownMenuItem className="cursor-pointer">
                       Profile
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="cursor-pointer">
-                      Billing
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="cursor-pointer">
-                      Team
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="cursor-pointer">
-                      Subscription
-                    </DropdownMenuItem>
+                    {!user.email ? (
+                      <>
+                        <Link to="/login">
+                          <DropdownMenuItem className="cursor-pointer">
+                            Login
+                          </DropdownMenuItem>
+                        </Link>
+                        <Link to="/signup">
+                          <DropdownMenuItem className="cursor-pointer">
+                            Sign Up
+                          </DropdownMenuItem>
+                        </Link>
+                      </>
+                    ) : (
+                      <DropdownMenuItem
+                        className="cursor-pointer"
+                        onClick={handleLogout}
+                      >
+                        Logout
+                      </DropdownMenuItem>
+                    )}
                   </DropdownMenuContent>
                 </DropdownMenu>
               </li>
